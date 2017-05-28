@@ -12,13 +12,18 @@ import CoreMotion
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     var backgroundNode: SKNode!
+    var backgroundNode2: SKNode!
     var midgroundNode: SKNode!
     var foregroundNode: SKNode!
+    var foregroundNode2: SKNode!
     
     var player: SKNode!// Tap to Start
     
     var scaleFactorBackground: CGFloat!
     var scaleFactorForeground: CGFloat!
+    
+    var previousTime: TimeInterval!
+    var deltaTime: TimeInterval!
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -26,6 +31,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override init(size: CGSize) {
         super.init(size: size)
+        
+        previousTime = 0
+        deltaTime = 0
         
         // Add some gravity
         physicsWorld.gravity = CGVector(dx: 0.0, dy: -5.0)
@@ -37,16 +45,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         backgroundColor = SKColor.white
         scaleFactorBackground = self.size.width / 1000
         var positionBackGroundNode = CGPoint(x: 0, y:0)
+        var positionBackGroundNode2 = CGPoint(x: size.width, y:0)
         backgroundNode = createBackgroundNode(position: positionBackGroundNode)
         backgroundNode.zPosition = 1
+    
+        backgroundNode2 = createBackgroundNode(position: positionBackGroundNode2)
+        backgroundNode2.zPosition = 1
         addChild(backgroundNode)
+        addChild(backgroundNode2)
         
         // Create foreground
         scaleFactorForeground = self.size.width / 320.0
         var positionForeGroundNode = CGPoint(x: 0, y:0);
+        var positionForeGroundNode2 = CGPoint(x: size.width, y:0);
         foregroundNode = createForegroundNode(position: positionForeGroundNode)
         foregroundNode.zPosition = 2
+        foregroundNode2 = createForegroundNode(position: positionForeGroundNode2)
+        foregroundNode2.zPosition = 2
         addChild(foregroundNode)
+        addChild(foregroundNode2)
         
         // Create player
         //player = createPlayer()
@@ -105,14 +122,43 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let node = SKSpriteNode(imageNamed: "BG")
         
         node.setScale(scaleFactorBackground)
-        node.anchorPoint = position
+        node.anchorPoint = CGPoint(x:0, y:0)
+        node.position = position
         
         backgroundNode.addChild(node)
         
         return backgroundNode
     }
     
+    func updatePositionBackgroundAndForeground() {
+        let displacement = CGFloat(deltaTime) * size.width / 3.0
+        backgroundNode.position.x = backgroundNode.position.x - displacement
+        backgroundNode2.position.x = backgroundNode2.position.x - displacement
+        foregroundNode.position.x = foregroundNode.position.x - displacement
+        foregroundNode2.position.x = foregroundNode2.position.x - displacement
+        
+        if (backgroundNode.position.x < -size.width) {
+            backgroundNode.position.x = 0
+        }
+        
+        if (backgroundNode2.position.x < -size.width) {
+            backgroundNode2.position.x = 0
+        }
+        
+        if (foregroundNode.position.x < -size.width) {
+            foregroundNode.position.x = 0
+        }
+        
+        if (foregroundNode2.position.x < -size.width) {
+            foregroundNode2.position.x = 0
+        }
+    }
+    
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
+        deltaTime = currentTime - previousTime
+        previousTime = currentTime
+ 
+        updatePositionBackgroundAndForeground()
     }
 }
