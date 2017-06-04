@@ -10,6 +10,12 @@ import SpriteKit
 import GameplayKit
 import CoreMotion
 
+
+struct CollisionBitMask {
+    static let playerCategory:UInt32 = 0x1 << 0
+    static let foregroundCategory:UInt32 = 0x1 << 1
+}
+
 class GameScene: SKScene, SKPhysicsContactDelegate {
     var backgroundNode: SKNode!
     var backgroundNode2: SKNode!
@@ -21,6 +27,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var scaleFactorBackground: CGFloat!
     var scaleFactorForeground: CGFloat!
+    var scaleFactorPlayer: CGFloat!
     
     var previousTime: TimeInterval!
     var deltaTime: TimeInterval!
@@ -30,6 +37,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override init(size: CGSize) {
+        let atlas = SKTextureAtlas(named: "Running")
+        var textures = [SKTexture]()
+        for index in 0...9 {
+            textures.append(atlas.textureNamed(String(format: "Run%02d.png", index + 1)))
+        }
         super.init(size: size)
         
         previousTime = 0
@@ -43,7 +55,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         // Create background
         backgroundColor = SKColor.white
-        scaleFactorBackground = self.size.width / 1000
+        scaleFactorBackground = self.size.width / 1000.0
         var positionBackGroundNode = CGPoint(x: 0, y:0)
         var positionBackGroundNode2 = CGPoint(x: size.width, y:0)
         backgroundNode = createBackgroundNode(position: positionBackGroundNode)
@@ -66,25 +78,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(foregroundNode2)
         
         // Create player
-        //player = createPlayer()
-        //foregroundNode.addChild(player)
+        scaleFactorPlayer = self.size.width / 587.0
+        player = createPlayer()
+        player.zPosition = 2
+        addChild(player)
         
         // Set properties of physicsBody
-        //player.physicsBody?.isDynamic = true
-        //player.physicsBody?.applyImpulse(CGVector(dx: 0.0, dy: 50.0))
+        player.physicsBody?.isDynamic = true
+        player.physicsBody?.applyImpulse(CGVector(dx: 0.0, dy: 0.0))
     }
     
     func createPlayer() -> SKNode {
         let playerNode = SKNode()
-        playerNode.position = CGPoint(x: self.size.width * 0.1, y: self.size.height * 0.2)
+        playerNode.position = CGPoint(x: self.size.width * 0.5, y: self.size.height * 0.5)
         
-        let sprite = SKSpriteNode(imageNamed: "Player")
+        let sprite = SKSpriteNode(imageNamed: "Run1.png")
+        sprite.setScale(scaleFactorPlayer / 10.0)
         playerNode.addChild(sprite)
         
         // 1
         playerNode.physicsBody = SKPhysicsBody(circleOfRadius: sprite.size.width / 2)
         // 2
-        playerNode.physicsBody?.isDynamic = false
+        playerNode.physicsBody?.isDynamic = true
         // 3
         playerNode.physicsBody?.allowsRotation = false
         // 4
@@ -92,6 +107,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         playerNode.physicsBody?.friction = 0.0
         playerNode.physicsBody?.angularDamping = 0.0
         playerNode.physicsBody?.linearDamping = 0.0
+        
+        playerNode.physicsBody?.categoryBitMask = CollisionBitMask.playerCategory
+        playerNode.physicsBody?.collisionBitMask = CollisionBitMask.foregroundCategory
+        playerNode.physicsBody?.contactTestBitMask = CollisionBitMask.foregroundCategory
         
         return playerNode
     }
@@ -110,6 +129,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             //5
             foregroundNode.addChild(node)
         }
+        foregroundNode.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: self.size.width, height: self.size.height / 20.0))
+        foregroundNode.physicsBody?.isDynamic = false
+        
+        foregroundNode.physicsBody?.categoryBitMask = CollisionBitMask.foregroundCategory
+        foregroundNode.physicsBody?.collisionBitMask = CollisionBitMask.playerCategory
+        foregroundNode.physicsBody?.contactTestBitMask = CollisionBitMask.playerCategory
         
         return foregroundNode
     }
@@ -131,11 +156,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func updatePositionBackgroundAndForeground() {
-        let displacement = CGFloat(deltaTime) * size.width / 3.0
-        backgroundNode.position.x = backgroundNode.position.x - displacement
-        backgroundNode2.position.x = backgroundNode2.position.x - displacement
-        foregroundNode.position.x = foregroundNode.position.x - displacement
-        foregroundNode2.position.x = foregroundNode2.position.x - displacement
+        let displacementForeground = CGFloat(deltaTime) * size.width / 5.0
+        let displacementBackground = CGFloat(deltaTime) * size.width / 12.0
+        backgroundNode.position.x = backgroundNode.position.x - displacementBackground
+        backgroundNode2.position.x = backgroundNode2.position.x - displacementBackground
+        foregroundNode.position.x = foregroundNode.position.x - displacementForeground
+        foregroundNode2.position.x = foregroundNode2.position.x - displacementForeground
         
         if (backgroundNode.position.x < -size.width) {
             backgroundNode.position.x = 0

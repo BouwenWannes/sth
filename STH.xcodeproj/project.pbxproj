@@ -15,6 +15,7 @@
 		B01FA9B21ECB7F8900B77B5F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B01FA9B01ECB7F8900B77B5F /* LaunchScreen.storyboard */; };
 		B01FA9BD1ECB7F8900B77B5F /* STHTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01FA9BC1ECB7F8900B77B5F /* STHTests.swift */; };
 		B01FA9C81ECB7F8900B77B5F /* STHUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01FA9C71ECB7F8900B77B5F /* STHUITests.swift */; };
+		B023F09D1EE44373009F8271 /* Running.atlas in Resources */ = {isa = PBXBuildFile; fileRef = B023F09C1EE44373009F8271 /* Running.atlas */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		B01FA9C31ECB7F8900B77B5F /* STHUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = STHUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B01FA9C71ECB7F8900B77B5F /* STHUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STHUITests.swift; sourceTree = "<group>"; };
 		B01FA9C91ECB7F8900B77B5F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B023F09C1EE44373009F8271 /* Running.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = Running.atlas; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +103,7 @@
 			children = (
 				B01FA9A11ECB7F8900B77B5F /* AppDelegate.swift */,
 				B01FA9A71ECB7F8900B77B5F /* GameScene.swift */,
+				B023F09C1EE44373009F8271 /* Running.atlas */,
 				B01FA9A91ECB7F8900B77B5F /* GameViewController.swift */,
 				B01FA9AB1ECB7F8900B77B5F /* Main.storyboard */,
 				B01FA9AE1ECB7F8900B77B5F /* Assets.xcassets */,
@@ -237,6 +240,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B01FA9AD1ECB7F8900B77B5F /* Main.storyboard in Resources */,
+				B023F09D1EE44373009F8271 /* Running.atlas in Resources */,
 				B01FA9AF1ECB7F8900B77B5F /* Assets.xcassets in Resources */,
 				B01FA9B21ECB7F8900B77B5F /* LaunchScreen.storyboard in Resources */,
 			);
@@ -516,6 +520,7 @@
 				B01FA9CE1ECB7F8900B77B5F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B01FA9CF1ECB7F8900B77B5F /* Build configuration list for PBXNativeTarget "STHTests" */ = {
 			isa = XCConfigurationList;
@@ -524,6 +529,7 @@
 				B01FA9D11ECB7F8900B77B5F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B01FA9D21ECB7F8900B77B5F /* Build configuration list for PBXNativeTarget "STHUITests" */ = {
 			isa = XCConfigurationList;
@@ -532,6 +538,7 @@
 				B01FA9D41ECB7F8900B77B5F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
