@@ -85,13 +85,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }*/
     
     override init(size: CGSize) {
+        super.init(size: size)
+        
         let atlas = SKTextureAtlas(named: "Running")
         var textures = [SKTexture]()
         for index in 0...9 {
-            textures.append(atlas.textureNamed(String(format: "Run%02d.png", index + 1)))
+            textures.append(atlas.textureNamed(String(format: "Run%d.png", index + 1)))
         }
         playerWalkingFrames = textures
-        super.init(size: size)
         
         previousTime = 0
         deltaTime = 0
@@ -144,7 +145,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let playerNode = SKNode()
         playerNode.position = CGPoint(x: self.size.width * 0.1, y: 32 * scaleFactorForeground)
         
-        let sprite = SKSpriteNode(imageNamed: "Run1.png")
+        let sprite = SKSpriteNode(texture: playerWalkingFrames[9])
         sprite.setScale(scaleFactorPlayer / 10.0)
         playerNode.addChild(sprite)
         
@@ -270,11 +271,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func walkingPlayer() {
         //This is our general runAction method to make our bear walk.
-        player.run(SKAction.repeatForever(
-            SKAction.animate(with: playerWalkingFrames,
-                                         timePerFrame: 0.1,
-                                         resize: false,
-                                         restore: true)),
-                       withKey:"walkingInPlaceBear")
+        print("Walking player")
+        player.children[0].run(SKAction.repeatForever(SKAction.animate(with: playerWalkingFrames, timePerFrame: 0.07)))
     }
 }
