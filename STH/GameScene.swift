@@ -23,7 +23,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var foregroundNode: SKNode!
     var foregroundNode2: SKNode!
     
-    var player: SKNode!// Tap to Start
+    var player: Player!
     
     var scaleFactorBackground: CGFloat!
     var scaleFactorForeground: CGFloat!
@@ -38,62 +38,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         super.init(coder: aDecoder)
     }
     
-
-    
-   /* func checkPhysics() {
-        
-        // Create an array of all the nodes with physicsBodies
-        var physicsNodes = [SKNode]()
-        
-        //Get all physics bodies
-        enumerateChildNodes(withName: "//.") { node, _ in
-            if let _ = node.physicsBody {
-                physicsNodes.append(node)
-            } else {
-                print("\(node.name) does not have a physics body so cannot collide or be involved in contacts.")
-            }
-        }
-        
-        //For each node, check it's category against every other node's collion and contctTest bit mask
-        for node in physicsNodes {
-            let category = node.physicsBody!.categoryBitMask
-            // Identify the node by its category if the name is blank
-            let name = node.name != nil ? node.name : "Category \(category)"
-            let collisionMask = node.physicsBody!.collisionBitMask
-            let contactMask = node.physicsBody!.contactTestBitMask
-            
-            // If all bits of the collisonmask set, just say it collides with everything.
-            if collisionMask == UInt32.max {
-                print("\(name) collides with everything")
-            }
-            
-            for otherNode in physicsNodes {
-                if (node != otherNode) && (node.physicsBody?.isDynamic == true) {
-                    let otherCategory = otherNode.physicsBody!.categoryBitMask
-                    // Identify the node by its category if the name is blank
-                    let otherName = otherNode.name != nil ? otherNode.name : "Category \(otherCategory)"
-                    
-                    // If the collisonmask and category match, they will collide
-                    if ((collisionMask & otherCategory) != 0) && (collisionMask != UInt32.max) {
-                        print("\(name) collides with \(otherName)")
-                    }
-                    // If the contactMAsk and category match, they will contact
-                    if (contactMask & otherCategory) != 0 {print("\(name) notifies when contacting \(otherName)")}
-                }
-            }
-        }
-    }*/
-    
     override init(size: CGSize) {
         super.init(size: size)
-        
-        let atlas = SKTextureAtlas(named: "Running")
-        var textures = [SKTexture]()
-        for index in 0...9 {
-            textures.append(atlas.textureNamed(String(format: "Run%d.png", index + 1)))
-        }
-        playerWalkingFrames = textures
-        
+
         previousTime = 0
         deltaTime = 0
         
@@ -129,45 +76,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // Create player
         scaleFactorPlayer = self.size.width / 587.0
-        player = createPlayer()
-        player.zPosition = 2
+        player = Player(x: self.size.width * 0.1, y: 32 * scaleFactorForeground, scaleFactorPlayer: scaleFactorPlayer)
         addChild(player)
-        
-        // Set properties of physicsBody
-        player.physicsBody?.applyImpulse(CGVector(dx: 0.0, dy: 0.0))
-        
-        //checkPhysics()
-        
-        walkingPlayer()
-    }
-    
-    func createPlayer() -> SKNode {
-        let playerNode = SKNode()
-        playerNode.position = CGPoint(x: self.size.width * 0.1, y: 32 * scaleFactorForeground)
-        
-        let sprite = SKSpriteNode(texture: playerWalkingFrames[9])
-        sprite.setScale(scaleFactorPlayer / 10.0)
-        playerNode.addChild(sprite)
-        
-        // 1
-        playerNode.physicsBody = SKPhysicsBody(circleOfRadius: sprite.size.width / 2)
-        // 2
-        playerNode.physicsBody?.isDynamic = true
-        // 3
-        playerNode.physicsBody?.allowsRotation = false
-        // 4
-        playerNode.physicsBody?.restitution = 0.0
-        playerNode.physicsBody?.friction = 0.0
-        playerNode.physicsBody?.angularDamping = 0.0
-        playerNode.physicsBody?.linearDamping = 0.0
-        
-        
-        playerNode.physicsBody?.categoryBitMask = CollisionBitMask.playerCategory
-        playerNode.physicsBody?.collisionBitMask = CollisionBitMask.foregroundCategory
-        playerNode.physicsBody?.usesPreciseCollisionDetection = true
-        playerNode.physicsBody?.contactTestBitMask = CollisionBitMask.foregroundCategory
-        
-        return playerNode
     }
     
     func createForegroundNode(position : CGPoint) -> SKNode {
@@ -219,7 +129,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func updatePositionBackgroundAndForeground() {
         let displacementForeground = CGFloat(deltaTime) * size.width / 5.0
-        let displacementBackground = CGFloat(deltaTime) * size.width / 12.0
+        let displacementBackground = CGFloat(deltaTime) * size.width / 30.0
         backgroundNode.position.x = backgroundNode.position.x - displacementBackground
         backgroundNode2.position.x = backgroundNode2.position.x - displacementBackground
         foregroundNode.position.x = foregroundNode.position.x - displacementForeground
@@ -242,36 +152,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
- /*   func didBegin(_ contact: SKPhysicsContact) {
-        NSLog("didBegin called");
-        var firstBody: SKPhysicsBody!
-        var secondBody: SKPhysicsBody!
-        firstBody = contact.bodyA;
-        secondBody = contact.bodyB;
-        
-        if(firstBody.categoryBitMask == CollisionBitMask.playerCategory || secondBody.categoryBitMask == CollisionBitMask.foregroundCategory)
-        {
-            NSLog("collision detected");
-        }
-        
-        if(firstBody.categoryBitMask == CollisionBitMask.foregroundCategory || secondBody.categoryBitMask == CollisionBitMask.playerCategory)
-        {
-            NSLog("collision detected");
-        }
-        
-    }
-    */
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
         deltaTime = currentTime - previousTime
         previousTime = currentTime
  
         updatePositionBackgroundAndForeground()
-    }
-    
-    func walkingPlayer() {
-        //This is our general runAction method to make our bear walk.
-        print("Walking player")
-        player.children[0].run(SKAction.repeatForever(SKAction.animate(with: playerWalkingFrames, timePerFrame: 0.07)))
     }
 }
