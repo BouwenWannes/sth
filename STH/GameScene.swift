@@ -45,7 +45,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         deltaTime = 0
         
         // Add some gravity
-        physicsWorld.gravity = CGVector(dx: 0.0, dy: -0.5)
+        physicsWorld.gravity = CGVector(dx: 0.0, dy: -1.5)
         
         // Set contact delegate
         physicsWorld.contactDelegate = self
@@ -84,6 +84,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         foregroundNode.updatePosition(displacement: displacementForeground)
         foregroundNode2.updatePosition(displacement: displacementForeground)
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
+    {
+        player.physicsBody?.applyImpulse(CGVector(dx: 0.0, dy: 40.0))
     }
     
     override func update(_ currentTime: TimeInterval) {
