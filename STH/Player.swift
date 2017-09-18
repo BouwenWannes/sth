@@ -8,8 +8,14 @@
 
 import SpriteKit
 
+enum PlayerAction: Int {
+    case Walking = 0
+    case Flying
+}
+
 class Player: SKNode {
     var playerWalkingFrames : [SKTexture]!
+    var state : PlayerAction!
     
     
     required init?(coder aDecoder: NSCoder) {
@@ -18,6 +24,8 @@ class Player: SKNode {
     
     init(x: CGFloat, y: CGFloat, scaleFactorPlayer: CGFloat) {
         super.init()
+        
+        state = .Walking
         
         let atlas = SKTextureAtlas(named: "Running")
         var textures = [SKTexture]()

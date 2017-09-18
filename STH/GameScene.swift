@@ -45,7 +45,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         deltaTime = 0
         
         // Add some gravity
-        physicsWorld.gravity = CGVector(dx: 0.0, dy: -1.5)
+        physicsWorld.gravity = CGVector(dx: 0.0, dy: -3.0)
         
         // Set contact delegate
         physicsWorld.contactDelegate = self
@@ -88,8 +88,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
     {
-        player.physicsBody?.applyImpulse(CGVector(dx: 0.0, dy: 40.0))
+        if (player.state == .Walking) {
+            player.physicsBody?.applyImpulse(CGVector(dx: 0.0, dy: 40.0))
+            player.state = .Flying
+        }
     }
+    
+    func didBegin(_ contact: SKPhysicsContact) {
+        var firstBody: SKPhysicsBody!
+        var secondBody: SKPhysicsBody!
+        firstBody = contact.bodyA;
+        secondBody = contact.bodyB;
+     
+        if(firstBody.categoryBitMask == CollisionBitMask.playerCategory || secondBody.categoryBitMask == CollisionBitMask.foregroundCategory)
+        {
+            player.state = .Walking
+        }
+     
+        if(firstBody.categoryBitMask == CollisionBitMask.foregroundCategory || secondBody.categoryBitMask == CollisionBitMask.playerCategory)
+        {
+            player.state = .Walking
+        }
+     }
+
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
