@@ -45,7 +45,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         deltaTime = 0
         
         // Add some gravity
-        physicsWorld.gravity = CGVector(dx: 0.0, dy: -3.0)
+        physicsWorld.gravity = CGVector(dx: 0.0, dy: -4.0)
         
         // Set contact delegate
         physicsWorld.contactDelegate = self
@@ -89,8 +89,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
     {
         if (player.state == .Walking) {
-            player.physicsBody?.applyImpulse(CGVector(dx: 0.0, dy: 40.0))
-            player.state = .Flying
+            player.physicsBody?.applyImpulse(CGVector(dx: 0.0, dy: 160.0))
+            player.state = .Jumping
+            player.jumpPlayerUp()
         }
     }
     
@@ -103,11 +104,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if(firstBody.categoryBitMask == CollisionBitMask.playerCategory || secondBody.categoryBitMask == CollisionBitMask.foregroundCategory)
         {
             player.state = .Walking
+            player.walkPlayer()
         }
      
         if(firstBody.categoryBitMask == CollisionBitMask.foregroundCategory || secondBody.categoryBitMask == CollisionBitMask.playerCategory)
         {
             player.state = .Walking
+            player.walkPlayer()
         }
      }
 
@@ -118,5 +121,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         previousTime = currentTime
  
         updatePositionBackgroundAndForeground()
+        if ((player.physicsBody?.velocity.dy)! < CGFloat(0)) {
+            player.jumpPlayerDown()
+        }
     }
 }

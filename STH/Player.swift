@@ -10,13 +10,18 @@ import SpriteKit
 
 enum PlayerAction: Int {
     case Walking = 0
-    case Flying
+    case Jumping
 }
 
 class Player: SKNode {
     var playerWalkingFrames : [SKTexture]!
+    var playerJumpingUpFrames : [SKTexture]!
+    var playerJumpingDownFrames : [SKTexture]!
     var state : PlayerAction!
-    
+    var runningAction : SKAction!
+    var jumpingActionUp : SKAction!
+    var jumpingActionDown : SKAction!
+    var sprite : SKSpriteNode!
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -27,17 +32,32 @@ class Player: SKNode {
         
         state = .Walking
         
-        let atlas = SKTextureAtlas(named: "Running")
-        var textures = [SKTexture]()
+        let atlasRunning = SKTextureAtlas(named: "Running")
+        let atlasJumping = SKTextureAtlas(named: "Jumping")
+        
+        var texturesRunning = [SKTexture]()
+        var texturesJumpingUp = [SKTexture]()
+        var texturesJumpingDown = [SKTexture]()
+
+        
         for index in 0...9 {
-            textures.append(atlas.textureNamed(String(format: "Run%d.png", index + 1)))
+            texturesRunning.append(atlasRunning.textureNamed(String(format: "Run%d.png", index + 1)))
+            if (index < 5) {
+                texturesJumpingUp.append(atlasJumping.textureNamed(String(format: "Jump%d.png", index + 1)))
+            }
+            else {
+                texturesJumpingDown.append(atlasJumping.textureNamed(String(format: "Jump%d.png", index + 1)))
+            }
         }
-        playerWalkingFrames = textures
+
+        playerWalkingFrames = texturesRunning
+        playerJumpingUpFrames = texturesJumpingUp
+        playerJumpingDownFrames = texturesJumpingDown
         
         position = CGPoint(x: x, y: y)
         zPosition = 2
         
-        let sprite = SKSpriteNode(texture: playerWalkingFrames[0])
+        sprite = SKSpriteNode(texture: playerWalkingFrames[0])
         sprite.setScale(scaleFactorPlayer / 10.0)
         addChild(sprite)
         
@@ -59,11 +79,23 @@ class Player: SKNode {
         physicsBody?.usesPreciseCollisionDetection = true
         physicsBody?.contactTestBitMask = CollisionBitMask.foregroundCategory
         
+        runningAction = SKAction.repeatForever(SKAction.animate(with: playerWalkingFrames, timePerFrame: 0.07))
+        jumpingActionUp = SKAction.repeat(SKAction.animate(with: playerJumpingUpFrames, timePerFrame: 0.07), count: 1)
+        jumpingActionDown = SKAction.repeat(SKAction.animate(with: playerJumpingDownFrames, timePerFrame: 0.07), count: 1)
+        
         walkPlayer()
     }
     
     func walkPlayer() {
-        children[0].run(SKAction.repeatForever(SKAction.animate(with: playerWalkingFrames, timePerFrame: 0.07)))
+        sprite.removeAllActions()
+        sprite.run(runningAction, withKey: "running")
+    }
+    func jumpPlayerUp() {
+        sprite.removeAllActions()
+        sprite.run(jumpingActionUp, withKey: "flyingUp")
+    }
+    func jumpPlayerDown() {
+        sprite.run(jumpingActionDown, withKey: "flyingDown")
     }
 }
 
