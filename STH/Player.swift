@@ -55,7 +55,7 @@ class Player: SKNode {
         playerJumpingDownFrames = texturesJumpingDown
         
         position = CGPoint(x: x, y: y)
-        zPosition = 2
+        zPosition = 3
         
         sprite = SKSpriteNode(texture: playerWalkingFrames[0])
         sprite.setScale(scaleFactorPlayer / 10.0)

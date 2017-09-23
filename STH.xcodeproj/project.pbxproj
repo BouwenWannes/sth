@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B014CD561F76E7E90045F936 /* Platform.swift in Sources */ = {isa = PBXBuildFile; fileRef = B014CD551F76E7E90045F936 /* Platform.swift */; };
 		B01FA9A21ECB7F8900B77B5F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01FA9A11ECB7F8900B77B5F /* AppDelegate.swift */; };
 		B01FA9A81ECB7F8900B77B5F /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01FA9A71ECB7F8900B77B5F /* GameScene.swift */; };
 		B01FA9AA1ECB7F8900B77B5F /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01FA9A91ECB7F8900B77B5F /* GameViewController.swift */; };
@@ -40,6 +41,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B014CD551F76E7E90045F936 /* Platform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Platform.swift; sourceTree = "<group>"; };
 		B01FA99E1ECB7F8900B77B5F /* STH.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = STH.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B01FA9A11ECB7F8900B77B5F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B01FA9A71ECB7F8900B77B5F /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
@@ -155,6 +157,7 @@
 				B098E9041F482A6C00EBB4BE /* Player.swift */,
 				B098E9061F4835C600EBB4BE /* Foreground.swift */,
 				B098E9081F4835D100EBB4BE /* Background.swift */,
+				B014CD551F76E7E90045F936 /* Platform.swift */,
 			);
 			name = SKNodes;
 			sourceTree = "<group>";
@@ -296,6 +299,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B014CD561F76E7E90045F936 /* Platform.swift in Sources */,
 				B098E9051F482A6C00EBB4BE /* Player.swift in Sources */,
 				B01FA9A81ECB7F8900B77B5F /* GameScene.swift in Sources */,
 				B098E9071F4835C600EBB4BE /* Foreground.swift in Sources */,

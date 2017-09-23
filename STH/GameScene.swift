@@ -14,6 +14,7 @@ import CoreMotion
 struct CollisionBitMask {
     static let playerCategory:UInt32 = 0x1 << 0
     static let foregroundCategory:UInt32 = 0x1 << 1
+    static let platformCategory:UInt32 = 0x1 << 2
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
@@ -25,9 +26,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var player: Player!
     
+    var platform1: Platform!
+    var platform2: Platform!
+    
     var scaleFactorBackground: CGFloat!
     var scaleFactorForeground: CGFloat!
     var scaleFactorPlayer: CGFloat!
+    var scaleFactorPlatform: CGFloat!
     
     var previousTime: TimeInterval!
     var deltaTime: TimeInterval!
@@ -73,6 +78,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         scaleFactorPlayer = self.size.width / 587.0
         player = Player(x: size.width * 0.1, y: 32 * scaleFactorForeground, scaleFactorPlayer: scaleFactorPlayer)
         addChild(player)
+        
+        // Create platforms
+        scaleFactorPlatform = scaleFactorForeground / 4
+        let positionPlatform1 = CGPoint(x: size.width / 4, y: size.height / 4)
+        let positionPlatform2 = CGPoint(x: size.width / 2, y: size.height / 2)
+        platform1 = Platform(width: size.width, position: positionPlatform1, scaleFactorPlatform: scaleFactorPlatform)
+        platform2 = Platform(width: size.width, position: positionPlatform2, scaleFactorPlatform: scaleFactorPlatform)
+        addChild(platform1)
+        addChild(platform2)
     }
     
     func updatePositionBackgroundAndForeground() {
@@ -84,6 +98,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         foregroundNode.updatePosition(displacement: displacementForeground)
         foregroundNode2.updatePosition(displacement: displacementForeground)
+        
+        platform1.updatePosition(displacement: displacementForeground)
+        platform2.updatePosition(displacement: displacementForeground)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
@@ -103,14 +120,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
      
         if(firstBody.categoryBitMask == CollisionBitMask.playerCategory || secondBody.categoryBitMask == CollisionBitMask.foregroundCategory)
         {
-            player.state = .Walking
-            player.walkPlayer()
+            if (player.state != .Walking) {
+                player.state = .Walking
+                player.walkPlayer()
+            }
         }
      
         if(firstBody.categoryBitMask == CollisionBitMask.foregroundCategory || secondBody.categoryBitMask == CollisionBitMask.playerCategory)
         {
-            player.state = .Walking
-            player.walkPlayer()
+            if (player.state != .Walking) {
+                player.state = .Walking
+                player.walkPlayer()
+            }
         }
      }
 
