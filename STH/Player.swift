@@ -55,7 +55,7 @@ class Player: SKNode {
         playerJumpingDownFrames = texturesJumpingDown
         
         position = CGPoint(x: x, y: y)
-        zPosition = 2
+        zPosition = 3
         
         sprite = SKSpriteNode(texture: playerWalkingFrames[0])
         sprite.setScale(scaleFactorPlayer / 10.0)
@@ -75,9 +75,9 @@ class Player: SKNode {
         
         
         physicsBody?.categoryBitMask = CollisionBitMask.playerCategory
-        physicsBody?.collisionBitMask = CollisionBitMask.foregroundCategory
+        physicsBody?.collisionBitMask = CollisionBitMask.foregroundCategory | CollisionBitMask.platformCategory
         physicsBody?.usesPreciseCollisionDetection = true
-        physicsBody?.contactTestBitMask = CollisionBitMask.foregroundCategory
+        physicsBody?.contactTestBitMask = CollisionBitMask.foregroundCategory | CollisionBitMask.platformCategory
         
         runningAction = SKAction.repeatForever(SKAction.animate(with: playerWalkingFrames, timePerFrame: 0.07))
         jumpingActionUp = SKAction.repeat(SKAction.animate(with: playerJumpingUpFrames, timePerFrame: 0.07), count: 1)
