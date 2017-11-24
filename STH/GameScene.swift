@@ -50,7 +50,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         deltaTime = 0
         
         // Add some gravity
-        physicsWorld.gravity = CGVector(dx: 0.0, dy: -4.0)
+        physicsWorld.gravity = CGVector(dx: 0.0, dy: -8.0)
         
         // Set contact delegate
         physicsWorld.contactDelegate = self
@@ -81,11 +81,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // Create platforms
         scaleFactorPlatform = scaleFactorForeground / 4
-        let positionPlatform1 = CGPoint(x: size.width / 4, y: size.height / 4)
-        let positionPlatform2 = CGPoint(x: size.width / 2, y: size.height / 2)
-        platform1 = Platform(width: size.width, position: positionPlatform1, scaleFactorPlatform: scaleFactorPlatform)
+        //let positionPlatform1 = CGPoint(x: size.width / 4, y: size.height / 4)
+        let positionPlatform2 = CGPoint(x: size.width, y: size.height / 4)
+        //platform1 = Platform(width: size.width, position: positionPlatform1, scaleFactorPlatform: scaleFactorPlatform)
         platform2 = Platform(width: size.width, position: positionPlatform2, scaleFactorPlatform: scaleFactorPlatform)
-        addChild(platform1)
+        //addChild(platform1)
         addChild(platform2)
     }
     
@@ -99,14 +99,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         foregroundNode.updatePosition(displacement: displacementForeground)
         foregroundNode2.updatePosition(displacement: displacementForeground)
         
-        platform1.updatePosition(displacement: displacementForeground)
+       // platform1.updatePosition(displacement: displacementForeground)
         platform2.updatePosition(displacement: displacementForeground)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
     {
         if (player.state == .Walking) {
-            player.physicsBody?.applyImpulse(CGVector(dx: 0.0, dy: 160.0))
+            player.physicsBody?.applyImpulse(CGVector(dx: 0.0, dy: 250.0))
             player.state = .Jumping
             player.jumpPlayerUp()
         }
